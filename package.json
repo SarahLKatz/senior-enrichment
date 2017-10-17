@@ -1,9 +1,10 @@
 {
-  "name": "senior_enrichment",
+  "name": "campus_directory",
   "version": "0.0.1",
   "description": "A review time project",
   "main": "index.js",
   "scripts": {
+    "seed": "node seed.js",
     "test": "mocha **/*.test.js *.test.js",
     "build": "webpack",
     "build-watch": "webpack -w",
@@ -15,9 +16,11 @@
     "skeleton"
   ],
   "dependencies": {
+    "bluebird": "^3.5.1",
     "body-parser": "^1.15.2",
     "chalk": "^1.1.3",
     "express": "^4.14.0",
+    "faker": "^4.1.0",
     "pg": "^6.1.0",
     "pg-native": "^1.10.0",
     "react": "^15.3.2",
