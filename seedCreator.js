@@ -7,12 +7,12 @@ const numCampuses = Math.floor(Math.random()*5) + 4;
 const numStudents = Math.floor(Math.random()*300);
 
 for (let i = 0; i < numCampuses; i++) {
-  const campusName = faker.random.word() + " " + faker.random.word();
+  const campusName = faker.random.word();
   campusData.push({
     name: campusName,
     pictureUrl: faker.image.business(),
     address: faker.fake("{{address.streetAddress}}, {{address.city}}, {{address.stateAbbr}} {{address.zipCode}}"),
-    email: `info@${campusName}.com`
+    email: `info@${campusName.replace(/\s+/g, '')}.com`
   })
 }
 
