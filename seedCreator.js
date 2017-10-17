@@ -4,7 +4,7 @@ const campusData = [];
 const studentData = [];
 
 const numCampuses = Math.floor(Math.random()*10) + 4;
-const numStudents = numCampuses*(Math.floor(Math.random()*50)) + 50;
+const numStudents = numCampuses*(Math.floor(Math.random()*30)) + 50;
 
 for (let i = 0; i < numCampuses; i++) {
   const campusName = faker.random.word();
