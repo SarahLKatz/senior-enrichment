@@ -1,6 +1,6 @@
 const api = require('express').Router()
 const db = require('../../db')
-const { Student, Campus } = require('../../db/models')
+const { Student } = require('../../db/models')
 
 api.get('/', (req,res,next) => {
   Student.findAll({})
@@ -9,11 +9,8 @@ api.get('/', (req,res,next) => {
 })
 
 api.get('/:studentId', (req,res,next) => {
-  Student.findAll({
-    where: {
-      id: req.params.studentId
-    }
-  })
+  const id = Number(req.params.studentId)
+  Student.findById(id)
   .then(studentData => res.json(studentData))
   .catch(err => console.error("Ruh-roh ...", err));
 })
@@ -33,11 +30,8 @@ api.post('/', (req,res,next) => {
 })
 
 api.put('/:studentId', (req,res,next) => {
-  Student.findOne({
-    where: {
-      id: req.params.studentId
-    }
-  })
+  const id = Number(req.params.studentId)
+  Student.findById(id)
   .then(res => {
     res.update({
       name: req.body.name || res.name,
@@ -47,5 +41,13 @@ api.put('/:studentId', (req,res,next) => {
   })
   .then(() => res.send('Student successfully updated!'))
 })
+
+api.delete('/:studentId', (req,res,next) => {
+  const id = Number(req.params.studentId)
+  Student.findById(id)
+  .then(student => student.destroy())
+  .then(() => res.send('Student successfully deleted'))
+})
+
 
 module.exports = api;

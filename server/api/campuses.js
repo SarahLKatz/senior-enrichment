@@ -1,6 +1,6 @@
 const api = require('express').Router()
 const db = require('../../db')
-const { Student, Campus } = require('../../db/models')
+const { Campus } = require('../../db/models')
 
 api.get('/', (req,res,next) => {
   Campus.findAll({})
@@ -9,21 +9,16 @@ api.get('/', (req,res,next) => {
 })
 
 api.get('/:campusId', (req,res,next) => {
-  Campus.findAll({
-    where: {
-      id: req.params.campusId
-    }
-  })
+  const id = Number(req.params.campusId)
+  Campus.findById(id)
   .then(campusData => res.json(campusData))
   .catch(err => console.error("Ruh-roh ...", err));
 })
 
 api.get('/:campusId/students', (req,res,next) => {
-  Student.findAll({
-    where: {
-      campusId: req.params.campusId
-    }
-  })
+  const id = Number(req.params.campusId)
+  Campus.findById(id)
+  .then(campus => campus.getStudents())
   .then(students => res.json(students))
   .catch(err => console.error("Ruh-roh ...", err));
 })
@@ -43,11 +38,8 @@ api.post('/', (req,res,next) => {
 })
 
 api.put('/:campusId', (req,res,next) => {
-  Campus.findOne({
-    where: {
-      id: req.params.campusId
-    }
-  })
+  const id = Number(req.params.campusId)
+  Campus.findById(id)
   .then(res => {
     res.update({
       name: req.body.name || res.name,
@@ -57,6 +49,13 @@ api.put('/:campusId', (req,res,next) => {
     })
   })
   .then(() => res.send('Campus successfully updated!'))
+})
+
+api.delete('/:campusId', (req,res,next) => {
+  const id = Number(req.params.campusId)
+  Campus.findById(id)
+  .then(campus => campus.destroy())
+  .then(() => res.send('Campus successfully deleted'))
 })
 
 module.exports = api;

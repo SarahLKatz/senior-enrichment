@@ -12,15 +12,16 @@ for (let i = 0; i < numCampuses; i++) {
     name: campusName,
     pictureUrl: faker.image.business(),
     address: faker.fake("{{address.streetAddress}}, {{address.city}}, {{address.stateAbbr}} {{address.zipCode}}"),
-    email: `info@${campusName.replace(/\s+/g, '')}.com`
+    email: `info@${campusName.toLowerCase().replace(/\s+/g, '')}.com`
   })
 }
 
 for (let j = 0; j < numStudents; j++) {
+  const studentName = faker.name.findName();
   studentData.push({
-    name: faker.name.findName(),
+    name: studentName,
     pictureUrl: faker.internet.avatar(),
-    email: faker.internet.email(),
+    email: `${studentName.toLowerCase().replace(/\s+/g, '.')}@campusemail.com`,
     campusId: Math.floor(Math.random() * campusData.length + 1)
   })
 }
