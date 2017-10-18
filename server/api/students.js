@@ -5,14 +5,14 @@ const { Student } = require('../../db/models')
 api.get('/', (req,res,next) => {
   Student.findAll({})
   .then(studentData => res.json(studentData))
-  .catch(err => console.error("Ruh-roh ...", err));
+  .catch(next);
 })
 
 api.get('/:studentId', (req,res,next) => {
   const id = Number(req.params.studentId)
   Student.findById(id)
   .then(studentData => res.json(studentData))
-  .catch(err => console.error("Ruh-roh ...", err));
+  .catch(next);
 })
 
 api.post('/', (req,res,next) => {
@@ -26,7 +26,7 @@ api.post('/', (req,res,next) => {
     res.status(201).send();
     res.redirect(`/students/${student.id}`);
   })
-  .catch(err => console.error("Ruh-roh ...", err));
+  .catch(next);
 })
 
 api.put('/:studentId', (req,res,next) => {

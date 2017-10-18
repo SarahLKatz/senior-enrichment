@@ -5,14 +5,14 @@ const { Campus } = require('../../db/models')
 api.get('/', (req,res,next) => {
   Campus.findAll({})
   .then(campusData => res.json(campusData))
-  .catch(err => console.error("Ruh-roh ...", err));
+  .catch(next);
 })
 
 api.get('/:campusId', (req,res,next) => {
   const id = Number(req.params.campusId)
   Campus.findById(id)
   .then(campusData => res.json(campusData))
-  .catch(err => console.error("Ruh-roh ...", err));
+  .catch(next);
 })
 
 api.get('/:campusId/students', (req,res,next) => {
@@ -20,7 +20,7 @@ api.get('/:campusId/students', (req,res,next) => {
   Campus.findById(id)
   .then(campus => campus.getStudents())
   .then(students => res.json(students))
-  .catch(err => console.error("Ruh-roh ...", err));
+  .catch(next);
 })
 
 api.post('/', (req,res,next) => {
@@ -34,7 +34,7 @@ api.post('/', (req,res,next) => {
   .then(campus => {
     res.status(201).send();
   })
-  .catch(err => console.error("Ruh-roh ...", err));
+  .catch(next);
 })
 
 api.put('/:campusId', (req,res,next) => {
@@ -49,6 +49,7 @@ api.put('/:campusId', (req,res,next) => {
     })
   })
   .then(() => res.send('Campus successfully updated!'))
+  .catch(next)
 })
 
 api.delete('/:campusId', (req,res,next) => {
@@ -56,6 +57,7 @@ api.delete('/:campusId', (req,res,next) => {
   Campus.findById(id)
   .then(campus => campus.destroy())
   .then(() => res.send('Campus successfully deleted'))
+  .catch(next)
 })
 
 module.exports = api;
