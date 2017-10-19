@@ -3,12 +3,16 @@ import axios from 'axios';
 const initialState = {
   campuses: [],
   students: [],
-  currentCampus: {},
+  currentCampus: {}
 }
 
 // Action Constants
 const GET_CAMPUSES = 'GET_CAMPUSES';
 const GET_SINGLE_CAMPUS = 'GET_SINGLE_CAMPUS';
+const EDIT_CAMPUS = 'EDIT_CAMPUS';
+// const REMOVE_STUDENT_FROM_CAMPUS = 'REMOVE_STUDENT_FROM_CAMPUS'; // Do after updating student stuff
+// const ADD_STUDENT_TO_CAMPUS = 'ADD_STUDENT_TO_CAMPUS'; // Do after updating student stuff
+const DELETE_CAMPUS = 'DELETE_CAMPUS';
 const GET_STUDENTS = 'GET_STUDENTS';
 
 // Action Creators
@@ -23,6 +27,20 @@ function getSingleCampus(currentCampus) {
   return {
     type: GET_SINGLE_CAMPUS,
     currentCampus
+  }
+}
+
+function editCampus(updatedCampus){
+  return {
+    type: EDIT_CAMPUS,
+    currentCampus: updatedCampus
+  }
+}
+
+function deleteCampus() {
+  return {
+    type: DELETE_CAMPUS,
+    currentCampus: {}
   }
 }
 
@@ -54,6 +72,24 @@ export function fetchSingleCampus(campusId) {
   }
 }
 
+export function fetchEditCampus(campusId, updatedCampus, history) {
+  return function (dispatch) {
+    console.log('Thunked, in the then');
+    axios.put(`/api/campuses/${campusId}`, updatedCampus)
+    .then(() => {
+      dispatch(editCampus(updatedCampus))
+      history.push(`/campuses/${campusId}`)
+    })
+  }
+}
+
+export function fetchDeleteCampus(campusId, history) {
+  return function (dispatch) {
+    axios.delete(`/api/campuses/${campusId}`)
+    .then(() => history.push('/'))
+  }
+}
+
 export function fetchAllStudents() {
   return function (dispatch) {
     axios.get('/api/students')
@@ -73,6 +109,12 @@ export default function reducer(state = initialState, action) {
       break;
     case GET_SINGLE_CAMPUS:
       newState.currentCampus = action.currentCampus;
+      break;
+    case EDIT_CAMPUS:
+      newState.currentCampus = action.updatedCampus;
+      break;
+    case DELETE_CAMPUS:
+      newState.currentCampus = {};
       break;
     case GET_STUDENTS:
       newState.students = action.students;

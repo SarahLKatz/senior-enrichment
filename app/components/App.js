@@ -99,8 +99,8 @@ export default class App extends Component {
         <Switch>
           <Route exact path="/" render={() => <AllCampuses campuses={this.state.campuses} />} />
           <Route path="/campuses/add" render={(props) => <AddCampus addCampus={this.addCampus} redirect={this.state.redirect}/>} />
-          <Route path="/campuses/:campusId/edit" render={(props) => <EditCampus campusId={props.match.params.campusId} allStudents={this.state.students}/>} />
-          <Route path="/campuses/:campusId" component={SingleCampus} />
+          <Route path="/campuses/:campusId/edit" render={(props) => <EditCampus campusId={props.match.params.campusId} history={props.history}/>} />
+          <Route path="/campuses/:campusId" render={(props) => <SingleCampus history={props.history} campusId={props.match.params.campusId} />} />
           <Route path="/campuses" render={() => <AllCampuses campuses={this.state.campuses} />} />
           <Route exact path="/students" render={() => <AllStudents campuses={this.state.campuses} students={this.state.students} deleteStudent={this.deleteStudent}/>} />
           <Route path="/students/add" render={(props) => <AddStudent campuses={this.state.campuses} addStudent={this.addStudent} redirect={this.state.redirect}/>} />

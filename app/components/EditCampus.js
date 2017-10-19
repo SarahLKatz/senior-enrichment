@@ -1,28 +1,33 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
+import store from '../store'
+import { fetchSingleCampus, fetchEditCampus, fetchRemoveStudentFromCampus } from '../reducers';
 
 export default class EditCampus extends Component {
   constructor() {
     super();
-    this.state = {
-      currentCampus: {},
-      students: [],
-      hasChanged: false,
-      studentRemoved: ''
-    }
+    // this.state = {
+    //   currentCampus: {},
+    //   students: [],
+    //   hasChanged: false,
+    //   studentRemoved: ''
+    // }
+    this.state = store.getState();
     this.handleInfoSubmit = this.handleInfoSubmit.bind(this);
     this.removeStudentFromCampus = this.removeStudentFromCampus.bind(this);
     this.addStudentToCampus = this.addStudentToCampus.bind(this)
   }
 
   componentDidMount(){
-    axios.get(`/api/campuses/${+this.props.campusId}`)
-    .then(res => res.data)
-    .then(currentCampus => this.setState({currentCampus}));
-    axios.get(`/api/campuses/${+this.props.campusId}/students`)
-    .then(res => res.data)
-    .then(students => this.setState({students}));
+    store.dispatch(fetchSingleCampus(+this.props.campusId));
+    this.unsubscribe = store.subscribe(() => {
+      this.setState(store.getState())
+    })
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   handleInfoSubmit(evt) {
@@ -33,23 +38,19 @@ export default class EditCampus extends Component {
       address: evt.target.address.value || '',
       email: evt.target.email.value || '',
     }
-    axios.put(`/api/campuses/${this.state.currentCampus.id}`, updatedCampus)
-    .then(() => {
-      axios.get(`/api/campuses/${this.state.currentCampus.id}`)
-      .then(res => res.data)
-      .then(currentCampus => this.setState({currentCampus, hasChanged: true}))
-    })
+    store.dispatch(fetchEditCampus(+this.props.campusId, updatedCampus, this.props.history));
   }
 
   removeStudentFromCampus(evt) {
     evt.preventDefault();
     const removedStudentId = evt.target.id;
-    axios.put(`/api/students/${removedStudentId}`, {
-      campusId: 101
-    })
-    .then(() => this.setState({
-      studentRemoved: removedStudentId
-    }))
+    // axios.put(`/api/students/${removedStudentId}`, {
+    //   campusId: 101
+    // })
+    // .then(() => this.setState({
+    //   studentRemoved: removedStudentId
+    // }))
+    store.dispatch(fetchRemoveStudentFromCampus(removedStudentId, this.props.history))
   } 
 
   addStudentToCampus(evt) {
@@ -68,16 +69,17 @@ export default class EditCampus extends Component {
 
   render () {
     const campus = this.state.currentCampus;
-    const campusStudentIds = this.state.students.map(student => student.id);
-    if (this.state.hasChanged) {
-      return (
-        <Redirect from={`/campuses/${this.state.currentCampus.id}/edit`} to={`/campuses/${this.state.currentCampus.id}`} />
-      ) 
-    } else if (this.state.studentRemoved) {
-      return (
-        <Redirect from={`/campuses/${this.state.currentCampus.id}/edit`} to={`/students/${this.state.studentRemoved}`} />
-      ) 
-    } else {
+    const campusStudents = this.state.students.filter(student => student.campusId === campus.id);
+    const campusStudentIds = campusStudents.map(student => student.id);
+    // if (this.state.hasChanged) {
+    //   return (
+    //     <Redirect from={`/campuses/${this.state.currentCampus.id}/edit`} to={`/campuses/${this.state.currentCampus.id}`} />
+    //   ) 
+    // } else if (this.state.studentRemoved) {
+    //   return (
+    //     <Redirect from={`/campuses/${this.state.currentCampus.id}/edit`} to={`/students/${this.state.studentRemoved}`} />
+    //   ) 
+    // } else {
       return (
         <div className="col-xs-8 col-xs-offset-2">
           <h3>Change Campus Information:</h3>
@@ -124,7 +126,7 @@ export default class EditCampus extends Component {
               </thead>
               <tbody>
               {
-               this.state.students.map(student => {
+               campusStudents.map(student => {
                 return (
                   <tr key={student.id}>
                     <td>{student.name}</td>
@@ -147,7 +149,7 @@ export default class EditCampus extends Component {
                     <form id="add-student" onSubmit={this.addStudentToCampus}>
                       <select name="add">
                       {
-                        this.props.allStudents.filter(student => !campusStudentIds.includes(student.id)).map(student => {
+                        this.state.students.filter(student => !campusStudentIds.includes(student.id)).map(student => {
                           return (
                             <option key={student.id} value={student.id}>{student.name}</option>
                           )
@@ -164,4 +166,3 @@ export default class EditCampus extends Component {
       )
     }
   }
-}
