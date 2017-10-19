@@ -11,30 +11,33 @@ import SingleStudent from './SingleStudent'
 import AddStudent from './AddStudent';
 import EditStudent from './EditStudent';
 import store from '../store'
-import {fetchAllCampuses} from '../reducers/campus'
+import { fetchAllCampuses} from '../reducers/campus'
 
 export default class App extends Component {
   constructor() {
     super();
-    this.state = {
-      campuses: [],
-      students: [],
-      redirect: false
-    }
     this.state = store.getState();
-    this.addCampus = this.addCampus.bind(this);
-    this.addStudent = this.addStudent.bind(this);
-    this.deleteStudent = this.deleteStudent.bind(this);
+    // this.state = {
+    //   campuses: [],
+    //   students: [],
+    //   redirect: false
+    // }
+    // this.addCampus = this.addCampus.bind(this);
+    // this.addStudent = this.addStudent.bind(this);
+    // this.deleteStudent = this.deleteStudent.bind(this);
   }
 
   componentDidMount(){
-    axios.get('/api/campuses')
-    .then(res => res.data)
-    .then(campuses => this.setState({campuses}))
-    axios.get('/api/students')
-    .then(res => res.data)
-    .then(students => this.setState({students}))
-    this.setState({redirect: false})
+    store.dispatch(fetchAllCampuses());
+    this.unsubscribe = store.subscribe(() => {this.setState(store.getState())})
+    // axios.get('/api/students')
+    // .then(res => res.data)
+    // .then(students => this.setState({students}))
+    // this.setState({redirect: false})
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   addCampus(evt) {
