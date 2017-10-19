@@ -11,7 +11,7 @@ import SingleStudent from './SingleStudent'
 import AddStudent from './AddStudent';
 import EditStudent from './EditStudent';
 import store from '../store'
-import { fetchAllCampuses, fetchAllStudents } from '../reducers/'
+import { fetchAllCampuses, fetchAllStudents, fetchAddCampus } from '../reducers/'
 
 export default class App extends Component {
   constructor() {
@@ -22,7 +22,7 @@ export default class App extends Component {
     //   students: [],
     //   redirect: false
     // }
-    // this.addCampus = this.addCampus.bind(this);
+    this.addCampus = this.addCampus.bind(this);
     // this.addStudent = this.addStudent.bind(this);
     // this.deleteStudent = this.deleteStudent.bind(this);
   }
@@ -47,17 +47,7 @@ export default class App extends Component {
       address: evt.target.address.value,
       email: evt.target.email.value
     }
-    axios.post('/api/campuses', newCampus)
-    .then((res) => {
-      console.log('Your new campus has been created!')
-    })
-    .then(axios.get('/api/campuses')
-      .then(res => res.data)
-      .then(campuses => this.setState({
-        campuses: campuses, 
-        redirect: true
-      }))
-    )
+    store.dispatch(fetchAddCampus(newCampus));
   }
 
   addStudent(evt) {
@@ -98,7 +88,7 @@ export default class App extends Component {
         <Navbar campuses={this.state.campuses} />
         <Switch>
           <Route exact path="/" render={() => <AllCampuses campuses={this.state.campuses} />} />
-          <Route path="/campuses/add" render={(props) => <AddCampus addCampus={this.addCampus} redirect={this.state.redirect}/>} />
+          <Route path="/campuses/add" render={(props) => <AddCampus addCampus={this.addCampus} history={props.history}/>} />
           <Route path="/campuses/:campusId/edit" render={(props) => <EditCampus campusId={props.match.params.campusId} history={props.history}/>} />
           <Route path="/campuses/:campusId" render={(props) => <SingleCampus history={props.history} campusId={props.match.params.campusId} />} />
           <Route path="/campuses" render={() => <AllCampuses campuses={this.state.campuses} />} />

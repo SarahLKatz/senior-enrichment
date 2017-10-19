@@ -9,6 +9,7 @@ const initialState = {
 // Action Constants
 const GET_CAMPUSES = 'GET_CAMPUSES';
 const GET_SINGLE_CAMPUS = 'GET_SINGLE_CAMPUS';
+const ADD_CAMPUS = 'ADD_CAMPUS';
 const EDIT_CAMPUS = 'EDIT_CAMPUS';
 // const REMOVE_STUDENT_FROM_CAMPUS = 'REMOVE_STUDENT_FROM_CAMPUS'; // Do after updating student stuff
 // const ADD_STUDENT_TO_CAMPUS = 'ADD_STUDENT_TO_CAMPUS'; // Do after updating student stuff
@@ -27,6 +28,13 @@ function getSingleCampus(currentCampus) {
   return {
     type: GET_SINGLE_CAMPUS,
     currentCampus
+  }
+}
+
+function addCampus(newCampus){
+  return {
+    type: ADD_CAMPUS,
+    newCampus
   }
 }
 
@@ -72,6 +80,15 @@ export function fetchSingleCampus(campusId) {
   }
 }
 
+export function fetchAddCampus(newCampus) {
+  return function (dispatch) {
+    axios.post('/api/campuses', newCampus)
+    .then(() => {
+      dispatch(addCampus(newCampus));
+    })
+  }
+}
+
 export function fetchEditCampus(campusId, updatedCampus, history) {
   return function (dispatch) {
     console.log('Thunked, in the then');
@@ -109,6 +126,9 @@ export default function reducer(state = initialState, action) {
       break;
     case GET_SINGLE_CAMPUS:
       newState.currentCampus = action.currentCampus;
+      break;
+    case ADD_CAMPUS:
+      newState.campuses = [...newState.campuses, action.newCampus];
       break;
     case EDIT_CAMPUS:
       newState.currentCampus = action.updatedCampus;
