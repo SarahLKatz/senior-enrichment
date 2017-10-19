@@ -23,7 +23,8 @@ api.post('/', (req,res,next) => {
   const newStudent ={
     name: req.body.name,
     pictureUrl: req.body.pictureUrl,
-    email: req.body.email
+    email: req.body.email,
+    campusId: req.body.campusId
   };
   Student.create(newStudent)
   .then(student => {
@@ -40,7 +41,8 @@ api.put('/:studentId', (req,res,next) => {
     res.update({
       name: req.body.name || res.name,
       pictureUrl: req.body.pictureUrl || res.pictureUrl,
-      email: req.body.email || res.email
+      email: req.body.email || res.email,
+      campusId: req.body.campusId || res.campusId
     })
   })
   .then(() => res.send('Student successfully updated!'))

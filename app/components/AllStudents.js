@@ -5,8 +5,8 @@ export default function AllStudents (props) {
   let campusNames = {};
   props.campuses.map(campus => {
     campusNames[campus.id] = campus.name
-  })
-  let studentToDelete;
+  });
+  let sortedStudents = props.students.sort((a,b) => +a.id - +b.id)
   return (
     <div className="container">
       <div className="col-xs-offset-11">
@@ -23,13 +23,13 @@ export default function AllStudents (props) {
         </thead>
         <tbody>
         {
-          props.students.map(student => {
+          sortedStudents.map(student => {
             return(
               <tr key={student.id}>
                 <td>{student.id}</td>
                 <td><Link to={`/students/${student.id}`}>{student.name}</Link></td>
                 <td><Link to={`/campuses/${student.campusId}`}>{campusNames[student.campusId]}</Link></td>
-                <td><button id={student.id} onClick={props.deleteStudent}>X</button></td>
+                <td><button className="remove-student" id={student.id} onClick={props.deleteStudent}>X</button></td>
               </tr>
             )
           })

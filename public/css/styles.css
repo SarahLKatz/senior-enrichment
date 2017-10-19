@@ -2,8 +2,16 @@
   box-sizing: border-box;
 }
 
+body {
+  background-color: rgba(0,0,0,0.1);
+}
+
 img {
   max-width: 100%;
+}
+
+.navbar {
+  background-color: rgba(0,0,100,0.1)
 }
 
 #campus-dropdown {
@@ -19,6 +27,34 @@ img {
   background-color: rgba(0,0,0,0.1)
 }
 
+.campus img {
+  height: 200px;
+  width: 200px;
+}
+
 .table-header td {
   font-weight: bold; 
+}
+
+.campus-button {
+  margin-top: 5%;
+}
+
+.student-button {
+  margin-top: 3.25%;
+  margin-bottom: 3.25%;
+}
+
+button.remove-student {
+  background: none;
+  border: none;
+  color: red;
+  font-weight: 700;
+}
+
+form {
+  border: 1px solid #CCC;
+  border-radius: 1%;
+  margin: 0 auto;
+  padding: 2%;
 }
