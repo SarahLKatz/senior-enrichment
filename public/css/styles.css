@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+}
+
+#campus-dropdown {
+  padding: 10%;
+  margin-left: 10%;
+  height: 20px;
+}
+
+.campus {
+  margin: 1%;
+  padding: 1%;
+  text-align: center;
+  background-color: rgba(0,0,0,0.1)
+}
+
+.table-header td {
+  font-weight: bold; 
+}

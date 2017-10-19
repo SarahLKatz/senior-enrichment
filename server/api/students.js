@@ -11,7 +11,11 @@ api.get('/', (req,res,next) => {
 api.get('/:studentId', (req,res,next) => {
   const id = Number(req.params.studentId)
   Student.findById(id)
-  .then(studentData => res.json(studentData))
+  .then(studentData => {
+    if (studentData.id) {
+      res.json(studentData)
+    }
+  })
   .catch(next);
 })
 
