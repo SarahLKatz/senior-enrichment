@@ -3,7 +3,8 @@ import axios from 'axios';
 const initialState = {
   campuses: [],
   students: [],
-  currentCampus: {}
+  currentCampus: {},
+  currentStudent: {}
 }
 
 // Action Constants
@@ -15,6 +16,7 @@ const EDIT_CAMPUS = 'EDIT_CAMPUS';
 // const ADD_STUDENT_TO_CAMPUS = 'ADD_STUDENT_TO_CAMPUS'; // Do after updating student stuff
 const DELETE_CAMPUS = 'DELETE_CAMPUS';
 const GET_STUDENTS = 'GET_STUDENTS';
+const GET_SINGLE_STUDENT = 'GET_SINGLE_STUDENT';
 
 // Action Creators
 function getCampuses(campuses) {
@@ -56,6 +58,13 @@ function getStudents(students) {
   return {
     type: GET_STUDENTS,
     students
+  }
+}
+
+function getSingleStudent(currentStudent) {
+  return {
+    type: GET_SINGLE_STUDENT,
+    currentStudent
   }
 }
 
@@ -117,6 +126,16 @@ export function fetchAllStudents() {
   }
 }
 
+export function fetchSingleStudent(studentId) {
+  return function (dispatch) {
+    axios.get(`/api/students/${studentId}`)
+    .then(res => res.data)
+    .then(currentStudent => {
+      dispatch(getSingleStudent(currentStudent))
+    });
+  }
+}
+
 // Reducer
 export default function reducer(state = initialState, action) {
   let newState = Object.assign({}, state)
@@ -138,6 +157,9 @@ export default function reducer(state = initialState, action) {
       break;
     case GET_STUDENTS:
       newState.students = action.students;
+      break;
+    case GET_SINGLE_STUDENT:
+      newState.currentStudent = action.currentStudent;
       break;
     default:
       return state;

@@ -5,15 +5,14 @@ import store from '../store'
 import { fetchSingleCampus, fetchDeleteCampus } from '../reducers'
 
 export default class SingleCampus extends Component {
-  constructor(props) {
+  constructor() {
     super();
     this.state = store.getState();
-    this.campusId = props.campusId;
     this.deleteCampus = this.deleteCampus.bind(this);
   }
 
   componentDidMount(){
-    store.dispatch(fetchSingleCampus(this.campusId));
+    store.dispatch(fetchSingleCampus(this.props.campusId));
     this.unsubscribe = store.subscribe(() => {
       this.setState(store.getState())
     })
