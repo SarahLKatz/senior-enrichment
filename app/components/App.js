@@ -11,7 +11,7 @@ import SingleStudent from './SingleStudent'
 import AddStudent from './AddStudent';
 import EditStudent from './EditStudent';
 import store from '../store'
-import { fetchAllCampuses} from '../reducers/campus'
+import { fetchAllCampuses, fetchAllStudents } from '../reducers/'
 
 export default class App extends Component {
   constructor() {
@@ -29,15 +29,14 @@ export default class App extends Component {
 
   componentDidMount(){
     store.dispatch(fetchAllCampuses());
-    this.unsubscribe = store.subscribe(() => {this.setState(store.getState())})
-    // axios.get('/api/students')
-    // .then(res => res.data)
-    // .then(students => this.setState({students}))
-    // this.setState({redirect: false})
+    store.dispatch(fetchAllStudents());
+    store.subscribe(() => {
+      this.setState(store.getState())
+    })
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
+    store.unsubscribe();
   }
 
   addCampus(evt) {
@@ -94,7 +93,6 @@ export default class App extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div>
         <Navbar campuses={this.state.campuses} />

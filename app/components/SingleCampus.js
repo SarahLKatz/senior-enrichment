@@ -1,25 +1,34 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {Link, Redirect } from 'react-router-dom';
+import store from '../store'
+import { fetchSingleCampus } from '../reducers'
 
 export default class SingleCampus extends Component {
   constructor() {
     super();
-    this.state = {
-      currentCampus: {},
-      students: [],
-      hasBeenDeleted: false
-    }
+    // this.state = {
+    //   currentCampus: {},
+    //   students: [],
+    //   hasBeenDeleted: false
+    // }
+    this.state = store.getState();
+    console.log(this.state)
     this.deleteCampus = this.deleteCampus.bind(this);
   }
 
   componentDidMount(){
-    axios.get(`/api/campuses/${+this.props.match.params.campusId}`)
-    .then(res => res.data)
-    .then(currentCampus => this.setState({currentCampus}));
-    axios.get(`/api/campuses/${+this.props.match.params.campusId}/students`)
-    .then(res => res.data)
-    .then(students => this.setState({students}));
+    const campusId = +this.props.match.params.campusId;
+    store.dispatch(fetchSingleCampus(campusId));
+    store.subscribe(() => {
+      this.setState(store.getState())
+    })
+    // axios.get(`/api/campuses/${+this.props.match.params.campusId}`)
+    // .then(res => res.data)
+    // .then(currentCampus => this.setState({currentCampus}));
+    // axios.get(`/api/campuses/${+this.props.match.params.campusId}/students`)
+    // .then(res => res.data)
+    // .then(students => this.setState({students}));
   }
 
   deleteCampus(evt){
@@ -36,6 +45,8 @@ export default class SingleCampus extends Component {
 
   render() {
     const campus = this.state.currentCampus;
+    const campusStudents = this.state.students.filter(student => student.campusId === this.state.currentCampus.id)
+    console.log(this.state);
     if (this.state.hasBeenDeleted) {
       return <Redirect from={`/campuses/${this.props.match.params.campusId}`} to="/campuses" />
     } else {
@@ -59,7 +70,7 @@ export default class SingleCampus extends Component {
             <h6>Students:</h6>
             <ol>
             {
-              this.state.students.map(student => {
+              campusStudents.map(student => {
                 return (
                   <li key={student.id}><Link to={`/students/${student.id}`}>{student.name}</Link></li>
                 )
