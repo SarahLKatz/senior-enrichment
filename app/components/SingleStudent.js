@@ -1,3 +1,5 @@
+// USER STORE - DELETE A STUDENT (SEE DELETE STUDENT FUNCTION)
+
 import React, {Component} from 'react';
 import axios from 'axios';
 import {Link, Redirect} from 'react-router-dom';
@@ -38,8 +40,6 @@ export default class SingleCampus extends Component {
   }
 
   render() {
-    console.log('props: ', this.props)
-    console.log('state:', this.state)
     const student = this.state.currentStudent;
     let campus = this.props.campuses.filter(campus => campus.id === student.campusId);
     if (campus.length) campus = campus[0];
@@ -51,7 +51,7 @@ export default class SingleCampus extends Component {
         <div className="col-xs-6">
           <h3>{student.name}</h3>
           <h4>Campus: {
-            (this.state.currentStudent.campusId === 101) ? (
+            (this.state.currentStudent.campusId === 101 || !this.state.currentStudent.campusId) ? (
               <select onChange={this.assignStudentToCampus}>
                 <option>Select a Campus For This Student</option>
                 {

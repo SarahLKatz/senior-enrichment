@@ -26,6 +26,7 @@ export default class App extends Component {
   componentDidMount(){
     axios.get('/api/campuses')
     .then(res => res.data)
+    .then(campuses => campuses.filter(campus => campus.id !== 101))
     .then(campuses => this.setState({campuses}))
     axios.get('/api/students')
     .then(res => res.data)
@@ -80,18 +81,45 @@ export default class App extends Component {
       <div>
         <Navbar campuses={this.state.campuses} />
         <Switch>
-          <Route exact path="/" render={() => <AllCampuses campuses={this.state.campuses} />} />
-          <Route path="/campuses/add" render={(props) => <AddCampus addCampus={this.addCampus} redirect={this.state.redirect}/>} />
-          <Route path="/campuses/:campusId/edit" render={(props) => <EditCampus campusId={props.match.params.campusId} allStudents={this.state.students} history={props.history}/> } />
-          <Route path="/campuses/:campusId" component={SingleCampus} />
-          <Route path="/campuses" render={() => <AllCampuses campuses={this.state.campuses} />} />
-          <Route exact path="/students" render={() => <AllStudents campuses={this.state.campuses} students={this.state.students} deleteStudent={this.deleteStudent}/>} />
-          <Route path="/students/add" render={(props) => <AddStudent campuses={this.state.campuses} addStudent={this.addStudent} redirect={this.state.redirect}/>} />
-          <Route path="/students/:studentId/edit" render={(props) => <EditStudent studentId={props.match.params.studentId} campuses={this.state.campuses}/>} />
-          <Route path="/students/:studentId" render={(props) => <SingleStudent campuses={this.state.campuses} id={props.match.params.studentId} history={props.history}/>} />
-  
+          <Route 
+            exact 
+            path="/" 
+            render={() => <AllCampuses campuses={this.state.campuses} />} 
+          />
+          <Route 
+            path="/campuses/add" 
+            render={(props) => <AddCampus addCampus={this.addCampus} redirect={this.state.redirect}/>} 
+          />
+          <Route 
+            path="/campuses/:campusId/edit" 
+            render={(props) => <EditCampus campusId={props.match.params.campusId} allStudents={this.state.students} history={props.history}/> } 
+          />
+          <Route 
+            path="/campuses/:campusId" 
+            component={SingleCampus} 
+          />
+          <Route 
+            path="/campuses" 
+            render={() => <AllCampuses campuses={this.state.campuses} />} 
+          />
+          <Route 
+            exact 
+            path="/students" 
+            render={() => <AllStudents campuses={this.state.campuses} students={this.state.students} deleteStudent={this.deleteStudent}/>} 
+          />
+          <Route 
+            path="/students/add" 
+            render={(props) => <AddStudent campuses={this.state.campuses} addStudent={this.addStudent} redirect={this.state.redirect}/>} 
+          />
+          <Route 
+            path="/students/:studentId/edit" 
+            render={(props) => <EditStudent studentId={props.match.params.studentId} campuses={this.state.campuses}/>} 
+          />
+          <Route 
+            path="/students/:studentId" 
+            render={(props) => <SingleStudent campuses={this.state.campuses} id={props.match.params.studentId} history={props.history}/>} 
+          />
         </Switch>
-        {/* Footer? */}
       </div>
     )
   }

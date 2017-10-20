@@ -1,3 +1,4 @@
+//EDUT A CAMPUS
 import React, {Component} from 'react';
 import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
@@ -49,13 +50,6 @@ export default class EditCampus extends Component {
       campusId: 101
     })
     .then(() => {
-      // console.log('In the then');
-      // this.setState({
-      //   studentRemoved: removedStudentId
-      // })
-      // axios.get(`/api/students/${removedStudentId}`)
-      // .then(res => res.data)
-      // .then(student => console.log(student))
       this.props.history.push(`/students/${removedStudentId}`)
     })
   } 

@@ -36,6 +36,7 @@ api.post('/', (req,res,next) => {
 
 api.put('/:studentId', (req,res,next) => {
   const id = Number(req.params.studentId)
+  console.log(req.body)
   Student.findById(id)
   .then(res => {
     res.update({

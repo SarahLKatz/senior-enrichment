@@ -1,3 +1,5 @@
+//EDIT STUDENT INFO
+
 import React, {Component} from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom'
@@ -20,6 +22,7 @@ export default class EditStudent extends Component {
 
   handleSubmit(evt) {
     evt.preventDefault();
+    console.log(evt.target.email.value)
     axios.put(`/api/students/${+this.props.studentId}`, {
       name: evt.target.name.value || '',
       pictureUrl: evt.target.pictureUrl.value || '',
@@ -29,6 +32,7 @@ export default class EditStudent extends Component {
     .then(() => this.setState({
       hasChanged: true
     }))
+    .then(res => console.log('what the what?'))
   }
 
   render () {
@@ -75,7 +79,7 @@ export default class EditStudent extends Component {
                   <td>
                   {
                     <select name="campusId">
-                      <option>Select a New Campus</option>
+                      <option value={''}>Select a New Campus</option>
                       {
                         allCampuses.map(campus => {
                           return (
