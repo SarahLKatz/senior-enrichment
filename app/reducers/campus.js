@@ -1,41 +1,20 @@
 import axios from 'axios';
 
-const initialState = {
-  campuses: [],
-  students: [],
-  currentCampus: {},
-  currentCampusStudents: []
-}
-
 // Action Constants
-const GET_CAMPUSES = 'GET_CAMPUSES';
-const GET_SINGLE_CAMPUS = 'GET_SINGLE_CAMPUS';
-const GET_STUDENTS = 'GET_STUDENTS';
+export const GET_CAMPUSES = 'GET_CAMPUSES';
 
 // Action Creators
-function getCampuses(campuses) {
+export function getCampuses(campuses) {
+  console.log('Creating my action...')
   return {
     type: GET_CAMPUSES,
     campuses
   }
 }
 
-function getSingleCampus(campus) {
-  return {
-    type: GET_SINGLE_CAMPUS,
-    campus
-  }
-}
-
-function getStudents(students) {
-  return {
-    type: GET_STUDENTS,
-    students
-  }
-}
-
 // Thunks
 export function fetchAllCampuses() {
+  console.log("I'm in the thunk...")
   return function (dispatch) {
     axios.get('/api/campuses')
     .then(res => res.data)
@@ -45,35 +24,14 @@ export function fetchAllCampuses() {
   }
 }
 
-export function fetchSingleCampus(campusId) {
-  return function (dispatch) {
-    axios.get(`/api/campuses/${campusId}`)
-    .then(res => res.data)
-    .then(currentCampus => {
-      dispatch(getSingleCampus(currentCampus))
-    });
-  }
-}
-
-export function fetchAllStudents() {
-  return function (dispatch) {
-    axios.get('/api/students')
-    .then(res => res.data)
-    .then(students => {
-      dispatch(getStudents(students))
-    })    
-  }
-}
-
 // Reducer
-export default function reducer(state = initialState, action) {
-  let newState = Object.assign({}, state)
+export default function reducer(state = [], action) {
+  console.log("I am in the reducer!")
+  let newState = Object.assign({},state)
   switch (action.type) {
     case GET_CAMPUSES:
+      console.log("Gettin' me some campuses...")
       newState.campuses = action.campuses
-      break;
-    case GET_STUDENTS:
-      newState.students = action.students
       break;
     default:
       return state;

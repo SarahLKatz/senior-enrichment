@@ -11,32 +11,30 @@ import SingleStudent from './SingleStudent'
 import AddStudent from './AddStudent';
 import EditStudent from './EditStudent';
 import store from '../store'
-import { fetchAllCampuses, fetchAllStudents, fetchAddCampus } from '../reducers/'
+import {fetchAllCampuses} from '../reducers/campus'
 
 export default class App extends Component {
   constructor() {
     super();
+    this.state = {
+      campuses: [],
+      students: [],
+      redirect: false
+    }
     this.state = store.getState();
-    // this.state = {
-    //   campuses: [],
-    //   students: [],
-    //   redirect: false
-    // }
     this.addCampus = this.addCampus.bind(this);
-    // this.addStudent = this.addStudent.bind(this);
-    // this.deleteStudent = this.deleteStudent.bind(this);
+    this.addStudent = this.addStudent.bind(this);
+    this.deleteStudent = this.deleteStudent.bind(this);
   }
 
   componentDidMount(){
-    store.dispatch(fetchAllCampuses());
-    store.dispatch(fetchAllStudents());
-    store.subscribe(() => {
-      this.setState(store.getState())
-    })
-  }
-
-  componentWillUnmount() {
-    store.unsubscribe();
+    axios.get('/api/campuses')
+    .then(res => res.data)
+    .then(campuses => this.setState({campuses}))
+    axios.get('/api/students')
+    .then(res => res.data)
+    .then(students => this.setState({students}))
+    this.setState({redirect: false})
   }
 
   addCampus(evt) {
@@ -47,7 +45,17 @@ export default class App extends Component {
       address: evt.target.address.value,
       email: evt.target.email.value
     }
-    store.dispatch(fetchAddCampus(newCampus));
+    axios.post('/api/campuses', newCampus)
+    .then((res) => {
+      console.log('Your new campus has been created!')
+    })
+    .then(axios.get('/api/campuses')
+      .then(res => res.data)
+      .then(campuses => this.setState({
+        campuses: campuses, 
+        redirect: true
+      }))
+    )
   }
 
   addStudent(evt) {
@@ -83,19 +91,20 @@ export default class App extends Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <div>
         <Navbar campuses={this.state.campuses} />
         <Switch>
-          <Route exact path="/" component={AllCampuses} />
-          <Route path="/campuses/add" render={(props) => <AddCampus addCampus={this.addCampus} />} />
-          <Route path="/campuses/:campusId/edit" render={(props) => <EditCampus campusId={props.match.params.campusId} history={props.history}/>} />
-          <Route path="/campuses/:campusId" render={(props) => <SingleCampus history={props.history} campusId={props.match.params.campusId} />} />
+          <Route exact path="/" render={() => <AllCampuses campuses={this.state.campuses} />} />
+          <Route path="/campuses/add" render={(props) => <AddCampus addCampus={this.addCampus} redirect={this.state.redirect}/>} />
+          <Route path="/campuses/:campusId/edit" render={(props) => <EditCampus campusId={props.match.params.campusId} allStudents={this.state.students}/>} />
+          <Route path="/campuses/:campusId" component={SingleCampus} />
           <Route path="/campuses" render={() => <AllCampuses campuses={this.state.campuses} />} />
           <Route exact path="/students" render={() => <AllStudents campuses={this.state.campuses} students={this.state.students} deleteStudent={this.deleteStudent}/>} />
           <Route path="/students/add" render={(props) => <AddStudent campuses={this.state.campuses} addStudent={this.addStudent} redirect={this.state.redirect}/>} />
           <Route path="/students/:studentId/edit" render={(props) => <EditStudent studentId={props.match.params.studentId} campuses={this.state.campuses}/>} />
-          <Route path="/students/:studentId" render={(props) => <SingleStudent SingleCampus history={props.history} studentId={props.match.params.studentId} deleteStudent={this.deleteStudent}/>} />
+          <Route path="/students/:studentId" render={(props) => <SingleStudent campuses={this.state.campuses} id={props.match.params.studentId} deleteStudent={this.deleteStudent}/>} />
   
         </Switch>
         {/* Footer? */}

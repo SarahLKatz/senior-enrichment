@@ -1,29 +1,21 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-import store from '../store'
-import { fetchSingleStudent } from '../reducers'
 
 export default class SingleCampus extends Component {
   constructor() {
     super();
-    // this.state = {
-    //   currentStudent: {},
-    //   changed: false
-    // }
-    this.state = store.getState();
+    this.state = {
+      currentStudent: {},
+      changed: false
+    }
     this.assignStudentToCampus = this.assignStudentToCampus.bind(this);
   }
 
   componentDidMount(){
-    store.dispatch(fetchSingleStudent(this.props.studentId));
-    this.unsubscribe = store.subscribe(() => {
-      this.setState(store.getState())
-    })
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
+    axios.get(`/api/students/${+this.props.id}`)
+    .then(res => res.data)
+    .then(currentStudent => this.setState({currentStudent}));
   }
 
   assignStudentToCampus(evt) {
@@ -40,7 +32,7 @@ export default class SingleCampus extends Component {
 
   render() {
     const student = this.state.currentStudent;
-    let campus = this.state.campuses.filter(campus => campus.id === student.campusId);
+    let campus = this.props.campuses.filter(campus => campus.id === student.campusId);
     if (campus.length) campus = campus[0];
     return (
       <div className="container">

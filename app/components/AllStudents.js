@@ -2,7 +2,6 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 
 export default function AllStudents (props) {
-  console.log(props)
   let campusNames = {};
   props.campuses.map(campus => {
     campusNames[campus.id] = campus.name
