@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Route, Switch, Redirect, history } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
 import AllCampuses from './AllCampuses';
@@ -10,8 +10,6 @@ import AllStudents from './AllStudents';
 import SingleStudent from './SingleStudent'
 import AddStudent from './AddStudent';
 import EditStudent from './EditStudent';
-import store from '../store'
-import {fetchAllCampuses} from '../reducers/campus'
 
 export default class App extends Component {
   constructor() {
@@ -21,7 +19,6 @@ export default class App extends Component {
       students: [],
       redirect: false
     }
-    this.state = store.getState();
     this.addCampus = this.addCampus.bind(this);
     this.addStudent = this.addStudent.bind(this);
     this.deleteStudent = this.deleteStudent.bind(this);
@@ -91,7 +88,6 @@ export default class App extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div>
         <Navbar campuses={this.state.campuses} />
