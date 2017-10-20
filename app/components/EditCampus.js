@@ -44,12 +44,20 @@ export default class EditCampus extends Component {
   removeStudentFromCampus(evt) {
     evt.preventDefault();
     const removedStudentId = evt.target.id;
-    axios.put(`/api/students/${removedStudentId}`, {
+    console.log('I hit the function!, studentId: ', removedStudentId)
+    axios.put(`/api/students/${+removedStudentId}`, {
       campusId: 101
     })
-    .then(() => this.setState({
-      studentRemoved: removedStudentId
-    }))
+    .then(() => {
+      // console.log('In the then');
+      // this.setState({
+      //   studentRemoved: removedStudentId
+      // })
+      // axios.get(`/api/students/${removedStudentId}`)
+      // .then(res => res.data)
+      // .then(student => console.log(student))
+      this.props.history.push(`/students/${removedStudentId}`)
+    })
   } 
 
   addStudentToCampus(evt) {

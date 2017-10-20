@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 
 export default class SingleCampus extends Component {
   constructor() {
@@ -10,6 +10,7 @@ export default class SingleCampus extends Component {
       changed: false
     }
     this.assignStudentToCampus = this.assignStudentToCampus.bind(this);
+    this.deleteStudent = this.deleteStudent.bind(this);
   }
 
   componentDidMount(){
@@ -22,15 +23,23 @@ export default class SingleCampus extends Component {
     axios.put(`/api/students/${+this.props.id}`, {
       campusId: evt.target.value
     })
-    .then(() => this.setState({
-      changed: true,
-      currentStudent: {
-        campusId: evt.target.value
-      }
-    }))
+    .then(() => 
+      this.props.history.push(`/students/${+this.props.id}`)
+    )
+  }
+
+  deleteStudent(evt) {
+    const studentToDelete = evt.target.id;
+    axios.delete(`/api/students/${studentToDelete}`)
+    .then(() => console.log('Student has been deleted'))
+    .then(() => {
+      this.props.history.push('/students');
+    })
   }
 
   render() {
+    console.log('props: ', this.props)
+    console.log('state:', this.state)
     const student = this.state.currentStudent;
     let campus = this.props.campuses.filter(campus => campus.id === student.campusId);
     if (campus.length) campus = campus[0];
@@ -63,7 +72,7 @@ export default class SingleCampus extends Component {
             <Link to={`${student.id}/edit`}><button className="btn col-xs-12 btn-primary">Edit Student</button></Link>
           </div>
           <div className="col-xs-12 student-button">
-            <button className="btn col-xs-12 btn-danger" id={student.id} onClick={this.props.deleteStudent}>Delete Student</button>
+            <button className="btn col-xs-12 btn-danger" id={student.id} onClick={this.deleteStudent}>Delete Student</button>
           </div>
         </div>
       </div>

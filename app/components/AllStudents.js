@@ -12,6 +12,7 @@ export default function AllStudents (props) {
       <div className="col-xs-offset-11">
         <Link to="/students/add" className="btn"><span className="glyphicon glyphicon-plus"></span> Add Student</Link>
       </div>
+      <h3 className="text-center">Student Directory</h3>
       <table className="table">
         <thead className="table-header">
           <tr>

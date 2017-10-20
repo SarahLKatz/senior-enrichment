@@ -43,6 +43,12 @@ campusData.push({
   pictureUrl: 'http://nineplanets.org/images/neptune.jpg',
   address: '2811 Florence Street, Greenville, TX 75401',
   email: 'talofa@fuafuaga.com'
+},{
+  name: 'Student is Unassigned',
+  pictureUrl: '',
+  address: '',
+  email: '',
+  id: 101
 })
 
 const numCampuses = campusData.length;
