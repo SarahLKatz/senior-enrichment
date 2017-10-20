@@ -8,6 +8,4 @@ const rootReducer = function(state = initialState, action) {
   }
 };
 
-const combinedReducer = combineReducers({rootReducer})
-
-export default combinedReducer
+export default rootReducer

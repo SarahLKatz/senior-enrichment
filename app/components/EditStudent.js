@@ -20,7 +20,6 @@ export default class EditStudent extends Component {
 
   handleSubmit(evt) {
     evt.preventDefault();
-    console.log(evt.target.email.value)
     axios.put(`/api/students/${+this.props.studentId}`, {
       name: evt.target.name.value || '',
       pictureUrl: evt.target.pictureUrl.value || '',
@@ -30,11 +29,9 @@ export default class EditStudent extends Component {
     .then(() => this.setState({
       hasChanged: true
     }))
-    .then(res => console.log('what the what?'))
   }
 
   render () {
-    console.log(this.state)
     const student = this.state.currentStudent;
     const allCampuses = this.props.campuses;
     const studentCampus = allCampuses.find(campus => campus.id === +student.campusId)

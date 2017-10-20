@@ -1,4 +1,3 @@
-//EDUT A CAMPUS
 import React, {Component} from 'react';
 import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
@@ -45,7 +44,6 @@ export default class EditCampus extends Component {
   removeStudentFromCampus(evt) {
     evt.preventDefault();
     const removedStudentId = evt.target.id;
-    console.log('I hit the function!, studentId: ', removedStudentId)
     axios.put(`/api/students/${+removedStudentId}`, {
       campusId: 101
     })
@@ -61,7 +59,6 @@ export default class EditCampus extends Component {
     axios.put(`/api/students/${newStudentId}`, {
       campusId: this.state.currentCampus.id
     })
-    .then(res => console.log(res))
     .then(() => this.setState({
       students: [...this.state.students, newStudent],
     }))
