@@ -10,6 +10,7 @@ import AllStudents from './AllStudents';
 import SingleStudent from './SingleStudent'
 import AddStudent from './AddStudent';
 import EditStudent from './EditStudent';
+import ErrorPage from './ErrorPage';
 
 export default class App extends Component {
   constructor() {
@@ -76,6 +77,13 @@ export default class App extends Component {
     )
   }
 
+  deleteStudent(evt) {
+    evt.preventDefault();
+    const studentToDelete = evt.target.id;
+    axios.delete(`/api/students/${studentToDelete}`)
+    .then(() => console.log('Student has been deleted'))
+  }
+
   render() {
     return (
       <div>
@@ -91,10 +99,12 @@ export default class App extends Component {
             render={(props) => <AddCampus addCampus={this.addCampus} redirect={this.state.redirect}/>} 
           />
           <Route 
+            exact
             path="/campuses/:campusId/edit" 
             render={(props) => <EditCampus campusId={props.match.params.campusId} allStudents={this.state.students} history={props.history}/> } 
           />
           <Route 
+            exact
             path="/campuses/:campusId" 
             component={SingleCampus} 
           />
@@ -112,13 +122,16 @@ export default class App extends Component {
             render={(props) => <AddStudent campuses={this.state.campuses} addStudent={this.addStudent} redirect={this.state.redirect}/>} 
           />
           <Route 
+            exact
             path="/students/:studentId/edit" 
             render={(props) => <EditStudent studentId={props.match.params.studentId} campuses={this.state.campuses}/>} 
           />
           <Route 
+            exact
             path="/students/:studentId" 
             render={(props) => <SingleStudent campuses={this.state.campuses} id={props.match.params.studentId} history={props.history}/>} 
           />
+          <Route component={ErrorPage} />
         </Switch>
       </div>
     )

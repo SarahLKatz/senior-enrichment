@@ -1,5 +1,3 @@
-// WORK ON VISIBILITY OF DROPDOWN - SEE BOOTSTRAP NAVBAR
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 
